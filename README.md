@@ -1,5 +1,5 @@
 # bezier
-4-points Bezier curve
+4-points Bezier curve using Pixi.js
 
 Points are draggable
 
