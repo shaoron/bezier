@@ -13,16 +13,6 @@ app.stage.interactive = true
 
 const curve = new PIXI.Graphics()
 
-function drawCurve (points) {
-  curve.clear()
-  curve.lineStyle(5, 0xC0C0C0, 1)
-  curve.moveTo(...points[0])
-  for (let t = 0; t < 1; t += 0.005) {
-    let point = bezier(t, points)
-    curve.lineTo(...point)
-  }
-}
-
 const drawPoints = points.map(point => {
   const drawPoint = new PIXI.Graphics()
   drawPoint.beginFill(0x000000)
@@ -33,15 +23,20 @@ const drawPoints = points.map(point => {
   drawPoint.interactive = true
   drawPoint.buttonMode = true
   drawPoint
-    .on('pointerdown', onDragStart)
-    .on('pointerup', onDragEnd)
-    .on('pointerupoutside', onDragEnd)
-    .on('pointermove', onDragMove)
+  .on('mousedown', onDragStart)
+  .on('touchstart', onDragStart)
+  .on('mouseup', onDragEnd)
+  .on('mouseupoutside', onDragEnd)
+  .on('touchend', onDragEnd)
+  .on('touchendoutside', onDragEnd)
+  .on('mousemove', onDragMove)
+  .on('touchmove', onDragMove);
+
   app.stage.addChild(drawPoint)
   return drawPoint
 })
 
-drawCurve(points)
+drawCurve(curve, points)
 app.stage.addChild(curve)
 
 function onDragStart (event) {
@@ -81,4 +76,14 @@ function bezier (parameter, points) {
   }
 
   return v[0]
+}
+
+function drawCurve (curve, points) {
+  curve.clear()
+  curve.lineStyle(5, 0xC0C0C0, 1)
+  curve.moveTo(...points[0])
+  for (let t = 0; t < 1; t += 0.005) {
+    let point = bezier(t, points)
+    curve.lineTo(...point)
+  }
 }
